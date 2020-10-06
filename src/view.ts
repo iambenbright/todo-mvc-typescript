@@ -1,11 +1,29 @@
 export class View {
+  private inputText: string = '';
+  private input: HTMLInputElement;
+  private form: HTMLFormElement;
+
   constructor(public app: HTMLDivElement) {
     this.app.append(this.createForm());
+    this.input = this.getElement('input') as HTMLInputElement;
+    this.form = this.getElement('form') as HTMLFormElement;
+
+    this.input.addEventListener('input', () => {
+      this.inputText = this.input.value;
+    });
   }
 
   render() {}
 
-  attachAddTodo() {}
+  attachAddTodo(cb: (todoText: string) => void) {
+    this.form.addEventListener('submit', event => {
+      event.preventDefault();
+      if (this.inputText.length > 0) {
+        cb(this.inputText);
+        this.input.value = '';
+      }
+    });
+  }
 
   attachRemoveTodo() {}
 
@@ -28,5 +46,7 @@ export class View {
 
   private createElement() {}
 
-  private getElement() {}
+  private getElement(value: string): Element | null {
+    return document.querySelector(value);
+  }
 }
