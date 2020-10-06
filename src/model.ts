@@ -8,13 +8,19 @@ class TodoItem {
 
 export class Model {
   private nextId = 1;
-  constructor(public userName: string, public todoList: TodoItem[] = []) {}
+  constructor(public todos: TodoItem[] = []) {
+    this.addTodo = this.addTodo.bind(this);
+    this.removeTodo = this.removeTodo.bind(this);
+    this.editTodo = this.editTodo.bind(this);
+    this.toggleComplete = this.toggleComplete.bind(this);
+  }
 
   addTodo(todoText: string): void {
-    while (this.getTodoId(this.nextId) !== undefined) {
+    while (this.getTodoById(this.nextId) !== undefined) {
       this.nextId++;
     }
-    this.todoList.push(new TodoItem(this.nextId, todoText, false));
+    this.todos.push(new TodoItem(this.nextId, todoText, false));
+    console.log(this.todos);
   }
 
   removeTodo(todoId: number) {}
@@ -23,7 +29,7 @@ export class Model {
 
   toggleComplete(todoid: number) {}
 
-  getTodoId(id: number): TodoItem | undefined {
-    return this.todoList.find(todo => todo.id === id);
+  getTodoById(id: number): TodoItem | undefined {
+    return this.todos.find(todo => todo.id === id);
   }
 }
