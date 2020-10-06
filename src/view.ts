@@ -1,9 +1,13 @@
+import { TodoItem } from './model';
+
 export class View {
   private inputText: string = '';
   private input: HTMLInputElement;
   private form: HTMLFormElement;
+  private todoList: HTMLUListElement;
 
   constructor(public app: HTMLDivElement) {
+    this.todoList = this.createElement('ul') as HTMLUListElement;
     this.app.append(this.createForm());
     this.input = this.getElement('input') as HTMLInputElement;
     this.form = this.getElement('form') as HTMLFormElement;
@@ -11,9 +15,16 @@ export class View {
     this.input.addEventListener('input', () => {
       this.inputText = this.input.value;
     });
+
+    this.render = this.render.bind(this);
   }
 
-  render() {}
+  render(todos: TodoItem[]): void {
+    this.todoList.innerHTML = '';
+    const LiFragment = todos.map(todo => this.createLiFragment(todo));
+    this.todoList.append(...LiFragment.reverse());
+    this.app.append(this.todoList);
+  }
 
   attachAddTodo(cb: (todoText: string) => void) {
     this.form.addEventListener('submit', event => {
@@ -42,9 +53,21 @@ export class View {
     return document.createRange().createContextualFragment(html);
   }
 
-  private createFragment() {}
+  private createLiFragment(todo: TodoItem): DocumentFragment {
+    const { id, task } = todo;
+    const html = `
+      <li data-id=${id}>
+        <input type=checkbox name=checkbox />
+        <span>${task}</span>
+        <button type=button>delete</button>
+      </li>
+    `;
+    return document.createRange().createContextualFragment(html);
+  }
 
-  private createElement() {}
+  private createElement(value: string): HTMLElement {
+    return document.createElement(value);
+  }
 
   private getElement(value: string): Element | null {
     return document.querySelector(value);
