@@ -36,7 +36,15 @@ export class View {
     });
   }
 
-  attachRemoveTodo() {}
+  attachRemoveTodo(cb: (todoId: number) => void) {
+    this.todoList.addEventListener('click', event => {
+      const target = event.target as HTMLElement;
+      if (target.tagName === 'BUTTON') {
+        const todoId = Number(target.parentElement?.getAttribute('data-id'));
+        cb(todoId);
+      }
+    });
+  }
 
   attachEditTodo() {}
 
@@ -57,9 +65,9 @@ export class View {
     const { id, task } = todo;
     const html = `
       <li data-id=${id}>
-        <input type=checkbox name=checkbox />
+        <input type="checkbox" name="checkbox" />
         <span>${task}</span>
-        <button type=button>delete</button>
+        <button type="button">delete</button>
       </li>
     `;
     return document.createRange().createContextualFragment(html);

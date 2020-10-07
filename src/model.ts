@@ -26,7 +26,11 @@ export class Model {
     this.bindTodosChanged(this.getTodos());
   }
 
-  removeTodo(todoId: number) {}
+  removeTodo(todoId: number) {
+    const filteredTodos = this.todos.filter(todo => todo.id !== todoId);
+    this.todos = filteredTodos;
+    this.bindTodosChanged(this.getTodos());
+  }
 
   editTodo(todoId: number, todoText: string) {}
 
