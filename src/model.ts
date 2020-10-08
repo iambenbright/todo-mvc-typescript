@@ -34,7 +34,13 @@ export class Model {
 
   editTodo(todoId: number, todoText: string) {}
 
-  toggleComplete(todoid: number) {}
+  toggleComplete(todoId: number) {
+    this.todos = this.todos.map(todo =>
+      todo.id === todoId ? { ...todo, completed: !todo.completed } : todo
+    );
+    this.bindTodosChanged(this.getTodos());
+    console.log(this.todos);
+  }
 
   private getTodoById(id: number): TodoItem | undefined {
     return this.todos.find(todo => todo.id === id);

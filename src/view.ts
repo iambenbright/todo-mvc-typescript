@@ -48,7 +48,15 @@ export class View {
 
   attachEditTodo() {}
 
-  attachToggleComplete() {}
+  attachToggleComplete(cb: (todoId: number) => void) {
+    this.todoList.addEventListener('click', event => {
+      const target = event.target as HTMLElement;
+      if (target.tagName === 'INPUT') {
+        const todoId = Number(target.parentElement?.getAttribute('data-id'));
+        cb(todoId);
+      }
+    });
+  }
 
   private createForm(): DocumentFragment {
     const html = `
@@ -62,10 +70,11 @@ export class View {
   }
 
   private createLiFragment(todo: TodoItem): DocumentFragment {
-    const { id, task } = todo;
+    const { id, task, completed } = todo;
+    const isChecked = completed ? 'checked' : '';
     const html = `
       <li data-id=${id}>
-        <input type="checkbox" name="checkbox" />
+        <input type="checkbox" name="checkbox" ${isChecked} />
         <span>${task}</span>
         <button type="button">delete</button>
       </li>
