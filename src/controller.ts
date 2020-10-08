@@ -14,6 +14,6 @@ export class Controller {
     // bind editTodo
     // this.view.attachEditTodo(this.model.editTodo);
     // bind toggleComplete
-    // this.view.attachToggleComplete(this.model.toggleComplete);
+    this.view.attachToggleComplete(this.model.toggleComplete);
   }
 }
