@@ -1,5 +1,12 @@
 import { TodoItem } from './model';
 
+export type Action = 'DELETE' | 'TOGGLECOMPLETE';
+
+export interface TodoListHandle {
+  action: Action;
+  callback: (id: number) => void;
+}
+
 export class View {
   private inputText: string = '';
   private input: HTMLInputElement;
@@ -21,8 +28,15 @@ export class View {
 
   render(todos: TodoItem[]): void {
     this.todoList.innerHTML = '';
-    const LiFragment = todos.map(todo => this.createLiFragment(todo));
-    this.todoList.append(...LiFragment.reverse());
+
+    if (todos.length === 0) {
+      const paragraph = this.createElement('p') as HTMLParagraphElement;
+      paragraph.textContent = 'You have no todo';
+      this.todoList.append(paragraph);
+    } else {
+      const LiFragment = todos.map(todo => this.createLiFragment(todo));
+      this.todoList.append(...LiFragment.reverse());
+    }
     this.app.append(this.todoList);
   }
 
@@ -36,27 +50,29 @@ export class View {
     });
   }
 
-  attachRemoveTodo(cb: (todoId: number) => void) {
+  handleTodoListEvents(handle: TodoListHandle) {
     this.todoList.addEventListener('click', event => {
       const target = event.target as HTMLElement;
-      if (target.tagName === 'BUTTON') {
-        const todoId = Number(target.parentElement?.getAttribute('data-id'));
-        cb(todoId);
+      const targetId = Number(target.parentElement?.getAttribute('data-id'));
+      const isDeleteTodo = target.getAttribute('data-action') === 'DELETE';
+      const isToggleTodoComplete =
+        target.getAttribute('data-action') === 'TOGGLECOMPLETE';
+
+      if (handle.action === 'DELETE') {
+        if (isDeleteTodo) {
+          handle.callback(targetId);
+        }
+      }
+
+      if (handle.action === 'TOGGLECOMPLETE') {
+        if (isToggleTodoComplete) {
+          handle.callback(targetId);
+        }
       }
     });
   }
 
   attachEditTodo() {}
-
-  attachToggleComplete(cb: (todoId: number) => void) {
-    this.todoList.addEventListener('click', event => {
-      const target = event.target as HTMLElement;
-      if (target.tagName === 'INPUT') {
-        const todoId = Number(target.parentElement?.getAttribute('data-id'));
-        cb(todoId);
-      }
-    });
-  }
 
   private createForm(): DocumentFragment {
     const html = `
@@ -74,9 +90,9 @@ export class View {
     const isChecked = completed ? 'checked' : '';
     const html = `
       <li data-id=${id}>
-        <input type="checkbox" name="checkbox" ${isChecked} />
+        <input type="checkbox" name="checkbox" ${isChecked} data-action="TOGGLECOMPLETE" />
         <span>${task}</span>
-        <button type="button">delete</button>
+        <button type="button" data-action="DELETE">delete</button>
       </li>
     `;
     return document.createRange().createContextualFragment(html);
