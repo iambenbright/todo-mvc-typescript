@@ -3,7 +3,7 @@ export class TodoItem {
     public id: number,
     public task: string,
     public completed: boolean
-  ) {}
+  ) { }
 }
 
 export class Model {
@@ -32,14 +32,18 @@ export class Model {
     this.bindTodosChanged(this.getTodos());
   }
 
-  editTodo(todoId: number, todoText: string) {}
+  editTodo(todoId: number, todoText: string) {
+    this.todos = this.todos.map(todo =>
+      todo.id === todoId ? { ...todo, task: todoText } : todo
+    );
+    this.bindTodosChanged(this.getTodos());
+  }
 
   toggleComplete(todoId: number) {
     this.todos = this.todos.map(todo =>
       todo.id === todoId ? { ...todo, completed: !todo.completed } : todo
     );
     this.bindTodosChanged(this.getTodos());
-    console.log(this.todos);
   }
 
   private getTodoById(id: number): TodoItem | undefined {
