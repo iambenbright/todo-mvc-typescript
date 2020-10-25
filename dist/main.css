@@ -1,0 +1,137 @@
+:root {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  font-size: 100%;
+  --primary-color: teal;
+  --body-background-color: rgb(243, 243, 243);
+  --spacing: 20px;
+}
+
+*,
+*::before,
+*::after {
+  -webkit-box-sizing: inherit;
+          box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: var(--body-background-color);
+}
+
+button {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border: none;
+}
+
+button:focus,
+button:active {
+  outline: none;
+}
+
+#app {
+  max-width: 768px;
+  margin: 0 var(--spacing);
+}
+
+@media (min-width: 1024px) {
+  #app {
+    margin: 0 auto;
+  }
+}
+
+.todo-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin-top: calc(var(--spacing) + 10px);
+}
+
+@media (min-width: 768px) {
+  .todo-list {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
+    -ms-grid-rows: auto;
+        grid-template-rows: auto;
+    gap: var(--spacing);
+  }
+}
+
+.todo-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  background-color: #fff;
+  padding: var(--spacing);
+  margin-top: var(--spacing);
+  -webkit-box-shadow: 0 2px 4px #ccc;
+          box-shadow: 0 2px 4px #ccc;
+  -webkit-transition: all 0.25s linear;
+  transition: all 0.25s linear;
+}
+
+@media (min-width: 768px) {
+  .todo-item {
+    margin-top: 0;
+  }
+}
+
+.todo-item:hover {
+  -webkit-box-shadow: 0 4px 8px #ccc;
+          box-shadow: 0 4px 8px #ccc;
+}
+
+.todo-item-text {
+  margin: 0;
+}
+
+.todo-item-actions {
+  margin-top: calc(var(--spacing) + 10px);
+}
+
+.add-form {
+  width: 100%;
+  display: -ms-grid;
+  display: grid;
+}
+
+@media (min-width: 768px) {
+  .add-form {
+    -ms-grid-columns: 1fr auto;
+        grid-template-columns: 1fr auto;
+  }
+}
+
+.add-form-input {
+  padding: calc(var(--spacing) - 10px) var(--spacing);
+}
+
+@media (min-width: 768px) {
+  .add-form-input {
+    margin-right: var(--spacing);
+  }
+}
+
+.add-form-button {
+  padding: calc(var(--spacing) - 10px);
+  margin-top: var(--spacing);
+  background-color: teal;
+  color: #fff;
+}
+
+@media (min-width: 768px) {
+  .add-form-button {
+    margin-top: 0;
+  }
+}
+/*# sourceMappingURL=main.css.map */

@@ -3,7 +3,7 @@ import { TodoItem } from './model';
 export enum Action {
   DELETE = 'DELETE',
   TOGGLECOMPLETE = 'TOGGLECOMPLETE',
-  EDIT = 'EDIT'
+  EDIT = 'EDIT',
 }
 
 export interface TodoListHandle {
@@ -22,6 +22,7 @@ export class View {
   constructor(private app: HTMLDivElement) {
     this.noTodoList = this.createElement('div') as HTMLDivElement;
     this.todoList = this.createElement('ul') as HTMLUListElement;
+    this.todoList.classList.add('todo-list');
     this.app.append(this.createAddFormFragment());
     this.input = this.getElement('input') as HTMLInputElement;
     this.form = this.getElement('form') as HTMLFormElement;
@@ -39,7 +40,7 @@ export class View {
 
     if (todos.length === 0) {
       const paragraph = this.createElement('p') as HTMLParagraphElement;
-      paragraph.textContent = 'You have no todo';
+      paragraph.textContent = 'You have no todo...';
       this.noTodoList.append(paragraph);
       this.todoList.remove();
       this.app.append(this.noTodoList);
@@ -64,7 +65,7 @@ export class View {
   handleTodoListEvents(handle: TodoListHandle) {
     this.todoList.addEventListener('click', event => {
       const target = event.target as HTMLElement;
-      const targetId = Number(target.parentElement?.getAttribute('data-id'));
+      const targetId = Number(target.closest('li')?.getAttribute('data-id'));
       const isDeleteTodo = target.getAttribute('data-action') === Action.DELETE;
       const isToggleTodoComplete =
         target.getAttribute('data-action') === Action.TOGGLECOMPLETE;
@@ -82,7 +83,7 @@ export class View {
 
       // handle edit todo
       if (handle.action === Action.EDIT && isEditTodo) {
-        const previousText = target.parentElement?.children[1].textContent;
+        const previousText = target.closest('li')?.children[0].textContent;
 
         if (previousText) {
           this.editInputText = previousText;
@@ -90,30 +91,28 @@ export class View {
           document.body.append(editForm);
 
           // get edited task
-          const editInput = this.getElement('[data-edit-input]') as HTMLLIElement;
+          const editInput = this.getElement(
+            '[data-edit-form-input]'
+          ) as HTMLLIElement;
           editInput.addEventListener('change', event => {
-            const target = event.target as HTMLInputElement
+            const target = event.target as HTMLInputElement;
             this.editInputText = target.value;
-          })
+          });
 
           const buttons = this.getElements('[data-edit-form] button');
           buttons.forEach(button => {
             button.addEventListener('click', event => {
               const target = event.target as HTMLButtonElement;
 
-              if (target.hasAttribute('data-edit-cancel')) {
+              if (target.hasAttribute('data-edit-form-cancel')) {
                 this.getElement('[data-edit-form]')?.remove();
-              }
-
-              if (target.hasAttribute('data-edit-ok')) {
+              } else if (target.hasAttribute('data-edit-form-ok')) {
                 if (previousText !== this.editInputText) {
                   handle.callback(targetId, this.editInputText);
-                  this.getElement('[data-edit-form]')?.remove();
-                } else {
-                  this.getElement('[data-edit-form]')?.remove();
                 }
+                this.getElement('[data-edit-form]')?.remove();
               }
-            })
+            });
           });
         }
       }
@@ -122,10 +121,10 @@ export class View {
 
   private createEditFormFragment(todoText: string): DocumentFragment {
     const html = `
-      <div data-edit-form>
-        <input type="text" value="${todoText}" data-edit-input />
-        <button data-edit-ok>Ok</button>
-        <button data-edit-cancel>Cancel</button>
+      <div class="edit-form" data-edit-form>
+        <input type="text" value="${todoText}" class="edit-form-input" data-edit-form-input />
+        <button class="edit-form-ok" data-edit-form-ok>Ok</button>
+        <button class="edit-form-cancel" data-edit-form-cancel>Cancel</button>
       </div>
     `;
     return this.createDOMFragment(html);
@@ -133,10 +132,10 @@ export class View {
 
   private createAddFormFragment(): DocumentFragment {
     const html = `
-      <form>
+      <form class="add-form">
         <label for="text-input" hidden>Todo</label>
-        <input type="text" name="text-input" placeholder="what do you want to do today?" />
-        <button>Add Todo</button>
+        <input type="text" name="text-input" placeholder="what do you want to do today?" class="add-form-input" />
+        <button class="add-form-button">Add Todo</button>
       </form>
     `;
     return this.createDOMFragment(html);
@@ -146,11 +145,13 @@ export class View {
     const { id, task, completed } = todo;
     const isChecked = completed ? 'checked' : '';
     const html = `
-      <li data-id=${id}>
-        <input type="checkbox" name="checkbox" ${isChecked} data-action="TOGGLECOMPLETE" />
-        <span>${task}</span>
-        <button type="button" data-action="DELETE">Delete</button>
-        <button type="button" data-action="EDIT">Edit</button>
+      <li data-id=${id} class="todo-item">
+        <p class="todo-item-text">${task}</p>
+        <div class="todo-item-actions">
+          <button type="button" data-action="DELETE">Delete</button>
+          <button type="button" data-action="EDIT">Edit</button>
+          <button type="button" data-action="TOGGLECOMPLETE">Completed</button>
+        </div>
       </li>
     `;
     return this.createDOMFragment(html);

@@ -1,33 +1,33 @@
-import { Model } from './model';
-import { View, Action } from './view';
+import { Model } from "./model";
+import { View, Action } from "./view";
 
 export class Controller {
-  constructor(private view: View, private model: Model) {
+  constructor(private _View: View, private _Model: Model) {
     // initial render
-    this.view.render(this.model.getTodos());
+    this._View.render(this._Model.getTodos());
 
     // bind addTodo
-    this.view.attachAddTodo(this.model.addTodo);
+    this._View.attachAddTodo(this._Model.addTodo);
 
     // bind onTodosChanged
-    this.model.onTodosChanged(this.view.render);
+    this._Model.onTodosChanged(this._View.render);
 
     // bind removeTodo
-    this.view.handleTodoListEvents({
+    this._View.handleTodoListEvents({
       action: Action.DELETE,
-      callback: this.model.removeTodo,
+      callback: this._Model.removeTodo,
     });
 
     // bind toggleComplete
-    this.view.handleTodoListEvents({
+    this._View.handleTodoListEvents({
       action: Action.TOGGLECOMPLETE,
-      callback: this.model.toggleComplete,
+      callback: this._Model.toggleComplete,
     });
 
     // bind editTodo
-    this.view.handleTodoListEvents({
+    this._View.handleTodoListEvents({
       action: Action.EDIT,
-      callback: this.model.editTodo
-    })
+      callback: this._Model.editTodo,
+    });
   }
 }

@@ -3,7 +3,7 @@ export class TodoItem {
     public id: number,
     public task: string,
     public completed: boolean
-  ) { }
+  ) {}
 }
 
 export class Model {
@@ -27,27 +27,27 @@ export class Model {
   }
 
   removeTodo(todoId: number) {
-    const filteredTodos = this.todos.filter(todo => todo.id !== todoId);
+    const filteredTodos = this.todos.filter((todo) => todo.id !== todoId);
     this.todos = filteredTodos;
     this.bindTodosChanged(this.getTodos());
   }
 
   editTodo(todoId: number, todoText: string) {
-    this.todos = this.todos.map(todo =>
+    this.todos = this.todos.map((todo) =>
       todo.id === todoId ? { ...todo, task: todoText } : todo
     );
     this.bindTodosChanged(this.getTodos());
   }
 
   toggleComplete(todoId: number) {
-    this.todos = this.todos.map(todo =>
+    this.todos = this.todos.map((todo) =>
       todo.id === todoId ? { ...todo, completed: !todo.completed } : todo
     );
     this.bindTodosChanged(this.getTodos());
   }
 
   private getTodoById(id: number): TodoItem | undefined {
-    return this.todos.find(todo => todo.id === id);
+    return this.todos.find((todo) => todo.id === id);
   }
 
   getTodos(): TodoItem[] {
