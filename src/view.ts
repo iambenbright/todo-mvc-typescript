@@ -14,18 +14,18 @@ export interface TodoListHandle {
 export class View {
   private inputText: string = '';
   private input: HTMLInputElement;
-  private form: HTMLFormElement;
+  private addForm: HTMLFormElement;
   private todoList: HTMLUListElement;
   private noTodoList: HTMLDivElement;
   private editInputText: string = '';
 
-  constructor(private app: HTMLDivElement) {
+  constructor(private app: HTMLElement) {
     this.noTodoList = this.createElement('div') as HTMLDivElement;
     this.todoList = this.createElement('ul') as HTMLUListElement;
     this.todoList.classList.add('todo-list');
     this.app.append(this.createAddFormFragment());
     this.input = this.getElement('input') as HTMLInputElement;
-    this.form = this.getElement('form') as HTMLFormElement;
+    this.addForm = this.getElement('[data-add-form]') as HTMLFormElement;
 
     this.input.addEventListener('input', () => {
       this.inputText = this.input.value;
@@ -52,8 +52,8 @@ export class View {
     }
   }
 
-  attachAddTodo(cb: (todoText: string) => void) {
-    this.form.addEventListener('submit', event => {
+  attachAddTodo(cb: (todoText: string) => void): void {
+    this.addForm.addEventListener('submit', event => {
       event.preventDefault();
       if (this.inputText.length > 0) {
         cb(this.inputText);
@@ -62,9 +62,9 @@ export class View {
     });
   }
 
-  handleTodoListEvents(handle: TodoListHandle) {
+  handleTodoListEvents(handle: TodoListHandle): void {
     this.todoList.addEventListener('click', event => {
-      const target = event.target as HTMLElement;
+      const target = event.target as HTMLElement | SVGElement;
       const targetId = Number(target.closest('li')?.getAttribute('data-id'));
       const isDeleteTodo = target.getAttribute('data-action') === Action.DELETE;
       const isToggleTodoComplete =
@@ -72,12 +72,7 @@ export class View {
       const isEditTodo = target.getAttribute('data-action') === Action.EDIT;
 
       // handle delete todo
-      if (handle.action === Action.DELETE && isDeleteTodo) {
-        handle.callback(targetId);
-      }
-
-      // handle toggle todo
-      if (handle.action === Action.TOGGLECOMPLETE && isToggleTodoComplete) {
+      if ((handle.action === Action.DELETE && isDeleteTodo) || (handle.action === Action.TOGGLECOMPLETE && isToggleTodoComplete)) {
         handle.callback(targetId);
       }
 
@@ -132,7 +127,7 @@ export class View {
 
   private createAddFormFragment(): DocumentFragment {
     const html = `
-      <form class="add-form">
+      <form class="add-form" data-add-form>
         <label for="text-input" hidden>Todo</label>
         <input type="text" name="text-input" placeholder="what do you want to do today?" class="add-form-input" />
         <button class="add-form-button">Add Todo</button>
@@ -143,7 +138,8 @@ export class View {
 
   private createLiFragment(todo: TodoItem): DocumentFragment {
     const { id, task, completed } = todo;
-    const isChecked = completed ? 'checked' : '';
+    // ToDo: checked task
+    // const isChecked = completed ? 'checked' : '';
     const html = `
       <li data-id=${id} class="todo-item">
         <p class="todo-item-text">${task}</p>

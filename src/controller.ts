@@ -9,7 +9,7 @@ export class Controller {
     // bind addTodo
     this._View.attachAddTodo(this._Model.addTodo);
 
-    // bind onTodosChanged
+    // bind onTodosChangediew: View, private _Model: Model) {
     this._Model.onTodosChanged(this._View.render);
 
     // bind removeTodo

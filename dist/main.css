@@ -26,11 +26,33 @@ button {
      -moz-appearance: none;
           appearance: none;
   border: none;
+  padding: 6px 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: bold;
+  color: #fff;
+  font-size: 12px;
+  border-radius: 2px;
 }
 
-button:focus,
-button:active {
+button:not(:last-of-type) {
+  margin-right: 4px;
+}
+
+button:focus, button:active {
   outline: none;
+}
+
+button[data-action='DELETE'] {
+  background-color: lightcoral;
+}
+
+button[data-action='EDIT'] {
+  background-color: lightskyblue;
+}
+
+button[data-action='TOGGLECOMPLETE'] {
+  background-color: lightgreen;
 }
 
 #app {
@@ -74,8 +96,8 @@ button:active {
   background-color: #fff;
   padding: var(--spacing);
   margin-top: var(--spacing);
-  -webkit-box-shadow: 0 2px 4px #ccc;
-          box-shadow: 0 2px 4px #ccc;
+  -webkit-box-shadow: 0 1px 2px #ccc;
+          box-shadow: 0 1px 2px #ccc;
   -webkit-transition: all 0.25s linear;
   transition: all 0.25s linear;
 }
@@ -134,4 +156,3 @@ button:active {
     margin-top: 0;
   }
 }
-/*# sourceMappingURL=main.css.map */
