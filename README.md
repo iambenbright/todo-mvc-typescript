@@ -24,7 +24,7 @@ using typescript.
 
 To get a local copy up and running, follow the following steps:
 
-1.  clone repository: [here](https://github.com/iambenbright/todo-mvc-typescript.git)
+1.  clone repository: [here](https://github.com/papayankey/todo-mvc-typescript.git)
 2.  cd into clone directory
 3.  install dependencies: `npm install`
 4.  cd into dist
@@ -34,8 +34,8 @@ To get a local copy up and running, follow the following steps:
 
 👦🏽 Benneth Yankey
 
-- Github: [@iambenbright](https://github.com/iambenbright)
-- Linkedin: [benneth yankey](edin.com/in/benneth-yankey-23201232/)
+- Github: [@papayankey](https://github.com/papayankey)
+- Linkedin: [benneth yankey](https://www.linkedin.com/in/benneth-yankey-23201232/)
 
 ## License
 
